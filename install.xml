@@ -8,6 +8,12 @@
 	<description lang="en">Allows an Administrator to view styles used by users.</description>
 	<author-group>
 		<author>
+			<realname>Mickaël Salfati</realname>
+			<email>elglobo@phpbb-services.com</email>
+			<username>Elglobo</username>
+			<homepage>http://www.phpbb-services.com</homepage>
+		</author>
+		<author>
 			<username>RMcGirr83</username>
 			<realname>Rich McGirr</realname>
 			<homepage>http://www.rmcgirr83.org/</homepage>
@@ -27,8 +33,8 @@
 					<changelog lang="en">
 						<change>Initial Release</change>
 					</changelog>
-			</entry>				
-		</history>		
+			</entry>
+		</history>
 </header>
 <action-group>
 		<copy>
@@ -41,7 +47,7 @@
 			</edit>
 		</open>
 	<php-installer><![CDATA[user_styles_install.php]]></php-installer>
-	<diy-instructions lang="en"><![CDATA[Login to your forum as board founder and browse to the user_styles_install.php file located in the root of your forum.  This will update the database for you.  
+	<diy-instructions lang="en"><![CDATA[Login to your forum as board founder and browse to the user_styles_install.php file located in the root of your forum.  This will update the database for you.
 Enjoy the mod!!]]></diy-instructions>
 </action-group>
 </mod>
