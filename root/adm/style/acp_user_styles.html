@@ -1,0 +1,55 @@
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+
+	<h1>{L_ACP_VIEW_USERS_STYLE}</h1>
+	<p>{L_ACP_VIEW_USERS_STYLE_EXPLAIN}</p>
+
+	<fieldset class="tabulated">
+
+	<legend>{L_ACP_VIEW_USERS_STYLE}</legend>
+
+	<table cellspacing="1">
+	<thead>
+	<tr>
+		<th>{L_USERNAME}</th>
+		<th>{L_USER_STYLE}</th>
+	</tr>
+	</thead>
+
+<!-- IF .users -->
+	<tbody>
+	<!-- BEGIN users -->
+
+		<tr class="<!-- IF mod.S_ROW_COUNT is even -->row1<!-- ELSE -->row2<!-- ENDIF -->">
+			<td>{users.USERNAME_FULL}</td>
+			<td><a href="{users.U_PREVIEW_STYLE}" title="{L_VIEW_STYLE}">{users.USER_STYLE}</a></td>
+		</tr>
+
+	<!-- END users-->
+
+	</tbody>
+	</table>
+
+   <!-- ELSE -->
+
+	</table>
+
+	<div class="errorbox">
+		<p><strong>{L_NO_USERS_ACP}</strong></p>
+		<br />
+	</div>
+
+<!-- ENDIF -->
+
+<!-- IF PAGINATION or TOTAL_USERS -->
+	<div class="pagination">
+		{TOTAL_USERS}<!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{S_ON_PAGE}</a> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+
+<!-- ENDIF -->
+
+	</fieldset>
+
+<!-- INCLUDE overall_footer.html -->
