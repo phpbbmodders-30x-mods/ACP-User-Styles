@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <?xml-stylesheet type="text/xsl" href="./contrib/modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.phpbb.com/mods/xml/modx-1.2.6.xsd">
 <header>
 	<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 	<title lang="en">ACP User Styles</title>
 	<description lang="en">Allows an Administrator to view styles used by users.</description>
 	<author-group>
 		<author>
+			<username>RMcGirr83</username>
+			<realname>Rich McGirr</realname>
+			<homepage>http://www.rmcgirr83.org/</homepage>
+			<email><![CDATA[rmcgirr83@rmcgirr83.org]]></email>
+		</author>	
+		<author>
 			<realname>Mickaël Salfati</realname>
 			<email>elglobo@phpbb-services.com</email>
 			<username>Elglobo</username>
 			<homepage>http://www.phpbb-services.com</homepage>
 		</author>
-		<author>
-			<username>RMcGirr83</username>
-			<realname>Rich McGirr</realname>
-			<homepage>http://www.rmcgirr83.org/</homepage>
-			<email><![CDATA[rmcgirr83@rmcgirr83.org]]></email>
-		</author>
 	</author-group>
-	<mod-version>1.0.0</mod-version>
+	<mod-version>1.0.1</mod-version>
 	<installation>
 		<level>easy</level>
 		<time>300</time>
-		<target-version>3.0.8</target-version>
+		<target-version>3.0.12</target-version>
 	</installation>
 		<history>
 			<entry>
@@ -34,6 +34,13 @@
 						<change>Initial Release</change>
 					</changelog>
 			</entry>
+			<entry>
+					<date>2013-11-09</date>
+					<rev-version>1.0.1</rev-version>
+					<changelog lang="en">
+						<change>Update for 3.0.12</change>
+					</changelog>
+			</entry>			
 		</history>
 </header>
 <action-group>

@@ -36,11 +36,11 @@ class acp_user_styles
 		$this->tpl_name     = 'acp_user_styles';
 		$this->page_title     = 'ACP_USER_STYLES';
 
-		$ignore_users = array(USER_FOUNDER, USER_NORMAL);
+		$user_types = array(USER_FOUNDER, USER_NORMAL);
 		// How many users do we have?
 		$sql = 'SELECT COUNT(user_id) AS total_users
 			FROM ' . USERS_TABLE . '
-			WHERE ' . $db->sql_in_set('user_type', $ignore_users) . '
+			WHERE ' . $db->sql_in_set('user_type', $user_types) . '
 			ORDER BY user_id';
 		$result = $db->sql_query($sql);
 		$total_users = (int) $db->sql_fetchfield('total_users');
@@ -53,8 +53,8 @@ class acp_user_styles
 				USERS_TABLE        => 'u',
 				STYLES_TABLE        => 's'
 			),
-			'WHERE'        => 'u.user_style = s.style_id AND ' . $db->sql_in_set('user_type', $ignore_users),
-			'ORDER_BY'    => 'u.user_id ASC'
+			'WHERE'        => $db->sql_in_set('user_type', $user_types) . ' AND u.user_style = s.style_id',
+			'ORDER_BY'    => 's.style_name, u.username_clean ASC'
 		));
 		$result = $db->sql_query_limit($sql, $config['topics_per_page'], $start);
 

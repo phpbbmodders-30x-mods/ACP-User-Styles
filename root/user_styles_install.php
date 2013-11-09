@@ -3,7 +3,7 @@
 *
 * @package umil
 * @version $Id
-* @copyright (c) 2010 phpbbmodders.net
+* @copyright (c) 2013 phpbbmodders.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -61,6 +61,10 @@ $versions = array(
 		),
 		'cache_purge'	=> (''),
 	),
+	// Version 1.0.1
+	'1.0.1'	=> array(
+	// nothing to do
+	),	
 );
 
 // Include the UMIF Auto file and everything else will be handled automatically.

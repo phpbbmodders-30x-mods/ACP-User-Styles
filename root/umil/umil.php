@@ -4,9 +4,8 @@
  * @author Nathan Guse (EXreaction) http://lithiumstudios.org
  * @author David Lewis (Highway of Life) highwayoflife@gmail.com
  * @package umil
- * @version $Id: umil.php 233 2010-08-10 02:22:09Z exreaction $
  * @copyright (c) 2008 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-define('UMIL_VERSION', '1.0.3');
+define('UMIL_VERSION', '1.0.5');
 
 /**
 * Multicall instructions
@@ -110,7 +109,7 @@ class umil
 	*/
 	var $stand_alone = false;
 
-    /**
+	/**
 	* Were any new permissions added (used in umil_frontend)?
 	*/
 	var $permissions_added = false;
@@ -198,8 +197,8 @@ class umil
 			$user->add_lang(array('acp/common', 'acp/permissions'));
 
 			// Check to see if a newer version is available.
-			$info = $this->version_check('www.phpbb.com', '/updatecheck', ((defined('PHPBB_QA')) ? 'umil_qa.txt' : 'umil.txt'));
-			if (is_array($info) && isset($info[0]) && isset($info[1]))
+			$info = $this->version_check('version.phpbb.com', '/umil', ((defined('PHPBB_QA')) ? 'umil_qa.txt' : 'umil.txt'));
+			if (is_array($info) && isset($info[0]) && isset($info[1]) && defined('DEBUG'))
 			{
 				if (version_compare(UMIL_VERSION, $info[0], '<'))
 				{
@@ -572,7 +571,7 @@ class umil
 		}
 
 		$style_id = (int) $style_id;
-		$type = (string) $type; // Prevent PHP bug.
+		$type = (is_array($type)) ? '' : strval($type); // only pass strings to switch()
 
 		switch ($type)
 		{
@@ -1518,6 +1517,12 @@ class umil
 	*/
 	function permission_exists($auth_option, $global = true)
 	{
+		// forum permissions shouldn't be set globally
+		if (strpos($auth_option, 'f_') === 0)
+		{
+			$global = false;
+		}
+
 		if ($global)
 		{
 			$type_sql = ' AND is_global = 1';
@@ -1563,6 +1568,12 @@ class umil
 		}
 
 		$this->umil_start('PERMISSION_ADD', $auth_option);
+
+		// forum permissions shouldn't be set globally
+		if (strpos($auth_option, 'f_') === 0)
+		{
+			$global = false;
+		}
 
 		if ($this->permission_exists($auth_option, $global))
 		{
@@ -1628,6 +1639,12 @@ class umil
 		}
 
 		$this->umil_start('PERMISSION_REMOVE', $auth_option);
+
+		// forum permissions shouldn't be set globally
+		if (strpos($auth_option, 'f_') === 0)
+		{
+			$global = false;
+		}
 
 		if (!$this->permission_exists($auth_option, $global))
 		{
@@ -2322,6 +2339,8 @@ class umil
 	*/
 	function table_index_add($table_name, $index_name = '', $column = array())
 	{
+		global $config;
+
 		// Multicall
 		if ($this->multicall(__FUNCTION__, $table_name))
 		{
@@ -2346,6 +2365,14 @@ class umil
 		if (!is_array($column))
 		{
 			$column = array($column);
+		}
+
+		// remove index length if we are before 3.0.8
+		// the feature (required for some types when using MySQL4)
+		// was added in that release (ticket PHPBB3-8944)
+		if (version_compare($config['version'], '3.0.7-pl1', '<='))
+		{
+			$column = preg_replace('#:.*$#', '', $column);
 		}
 
 		$this->db_tools->sql_create_index($table_name, $index_name, $column);
@@ -2542,7 +2569,7 @@ class umil
 
 		// A list of types being unsigned for better reference in some db's
 		$unsigned_types = array('UINT', 'UINT:', 'USINT', 'BOOL', 'TIMESTAMP');
-		$supported_dbms = array('firebird', 'mssql', 'mysql_40', 'mysql_41', 'oracle', 'postgres', 'sqlite');
+		$supported_dbms = array('firebird', 'mssql', 'mssqlnative', 'mysql_40', 'mysql_41', 'oracle', 'postgres', 'sqlite');
 
 		$sql = '';
 
@@ -2561,6 +2588,7 @@ class umil
 			break;
 
 			case 'mssql':
+			case 'mssqlnative':
 				$sql .= "CREATE TABLE [{$table_name}] (\n";
 			break;
 		}
@@ -2699,6 +2727,7 @@ class umil
 				break;
 
 				case 'mssql':
+				case 'mssqlnative':
 					if ($column_type == '[text]')
 					{
 						$textimage = true;
@@ -2778,6 +2807,7 @@ class umil
 			break;
 
 			case 'mssql':
+			case 'mssqlnative':
 				$sql = substr($sql, 0, -2);
 				$sql .= "\n) ON [PRIMARY]" . (($textimage) ? ' TEXTIMAGE_ON [PRIMARY]' : '') . "\n";
 				$sql .= "GO\n\n";
@@ -2812,6 +2842,7 @@ class umil
 				break;
 
 				case 'mssql':
+				case 'mssqlnative':
 					$sql .= "ALTER TABLE [{$table_name}] WITH NOCHECK ADD \n";
 					$sql .= "\tCONSTRAINT [PK_{$table_name}] PRIMARY KEY  CLUSTERED \n";
 					$sql .= "\t(\n";
@@ -2904,6 +2935,7 @@ class umil
 					break;
 
 					case 'mssql':
+					case 'mssqlnative':
 						$sql .= ($key_data[0] == 'INDEX') ? 'CREATE  INDEX' : '';
 						$sql .= ($key_data[0] == 'UNIQUE') ? 'CREATE  UNIQUE  INDEX' : '';
 						$sql .= " [{$key_name}] ON [{$table_name}]([" . implode('], [', $key_data[1]) . "]) ON [PRIMARY]\n";
@@ -3019,7 +3051,19 @@ class umil
 		*/
 		if (!preg_match('#^' . preg_quote($table_prefix, '#') . '#', $table_name) || !in_array($table_name, $constants, true))
 		{
-			$table_name = preg_replace('#^phpbb_#i', $table_prefix, $table_name);
+			if ((strpos($table_name, $table_prefix) === 0) && (strlen($table_name) > strlen($table_prefix)))
+			{
+				/**
+				* Do not replace phpbb_ with the prefix, if it is already at the beginning.
+				* Otherwise we would replace the prefix "phpbb_umil" multiple times and
+				* end up with phpbb_umilumilumil_tablename, if the constant is not defined.
+				* See Bug #62646.
+				*/
+			}
+			else
+			{
+				$table_name = preg_replace('#^phpbb_#i', $table_prefix, $table_name);
+			}
 		}
 	}
 }
